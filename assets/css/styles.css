@@ -1,8 +1,56 @@
-/* body {
-    background-color: green;
+body {
+    font-family: roboto, sans-serif;
+    background-color: #e9ebee;
+    margin: 0;
+    font-size: 16px;
 }
 
-.img-test {
-    height: 250px;
-    width: 550px;
+.main {
+    font-family: Helvetica, Arial,sans-serif;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+}
+
+.left-side,
+.right-side {
+    flex-basis: 50%;
+}
+
+.left-side {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* .error {
+
 } */
+
+.header-1 {
+    color: #212121;
+}
+.div-head-1 {
+    color: #212121;
+    font-size: 20px;
+}
+
+.sign-up-form {
+    margin-top: 10px;
+}
+.text-field {
+    height: 25px;
+    padding: 5px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.text-input {
+    height: 25px;
+    padding: 5px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-top: 0.8rem;
+    width: 70%;
+}

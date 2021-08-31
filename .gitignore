@@ -1,1 +1,7 @@
+node_modules/
+package-lock.json
+*.jpg
 *.png
+*.mp4
+*.webm
+fonts/

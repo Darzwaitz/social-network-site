@@ -17,8 +17,8 @@
         </div>
         <div class="right-side">
             <div class="error"></div>
-            <h1 class="header-1">Create account</h1>
-            <div class="div-head-1">It's free and always will be</div>
+            <h1 class="heading-primary">Create account</h1>
+            <div class="heading-secondary">It's free and always will be</div>
             <form action="sign.php" method="post" name="user-sign-up">
                 <div class="sign-up-form">
                     <div class="sign-up-name">

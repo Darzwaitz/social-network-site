@@ -3,7 +3,24 @@
 require '../connect/DB.php';
 
 if (isset($_POST['first-name']) && !empty($_POST['first-name'])) {
+    $upFirst = $_POST['first-name'];
+    $upLast = $_POST['last-name'];
+    $upEmailMobile = $_POST['email-mobile'];
+    $upPassword = $_POST['up-password'];
+    $birthDay = $_POST['birth-day'];
+    $birthMonth = $_POST['birth-month'];
+    $birthYear = $_POST['birth-year'];
+    if (!empty($_POST['gen'])) {
+        $upgen = $_POST['gen'];
+    }
+    $birth = '' . $birthYear . '-' . $birthMonth . '-' . $birthDay . '';
+
+    // if any form fields are empty
+    if (empty($upFirst) or empty($upLast) or empty($upEmailMobile) or empty($upgen)) {
+        $error = 'All fields are required';
+    }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -24,7 +41,11 @@ if (isset($_POST['first-name']) && !empty($_POST['first-name'])) {
             <img src="../assets/image/Signin-image.png" class="img-test" alt="signin image">
         </div>
         <div class="right-side">
-            <div class="error"></div>
+            <div class="error">
+                <?php if (!empty($error)) {
+                    echo $error;
+                } ?>
+            </div>
             <h1 class="heading-primary">Create account</h1>
             <div class="heading-secondary">It's free and always will be</div>
             <form action="sign.php" method="post" name="user-sign-up">
@@ -37,7 +58,7 @@ if (isset($_POST['first-name']) && !empty($_POST['first-name'])) {
                         <input type="text" name="email-mobile" id="up-email" placeholder="Mobile number or email address" class="text-input">
                     </div>
                     <div class="sign-up-password">
-                        <input type="password" name="up=password" id="up-password" class="text-input">
+                        <input type="password" name="up-password" id="up-password" class="text-input">
                     </div>
                     <div class="sign-up-birthday">
                         <div class="bday">Birthday</div>

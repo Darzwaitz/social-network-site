@@ -1,6 +1,6 @@
 <?php
 
-require '../core/database/connection.php';
+require '../core/load.php';
 
 if (isset($_POST['first-name']) && !empty($_POST['first-name'])) {
     $upFirst = $_POST['first-name'];
@@ -15,9 +15,22 @@ if (isset($_POST['first-name']) && !empty($_POST['first-name'])) {
     }
     $birth = '' . $birthYear . '-' . $birthMonth . '-' . $birthDay . '';
 
-    // if any form fields are empty
+    // if any form fields are empty, else security screen input
     if (empty($upFirst) or empty($upLast) or empty($upEmailMobile) or empty($upgen)) {
         $error = 'All fields are required';
+    } else {
+        $first_name = $loadFromUser->checkInput($upFirst);
+        $last_name = $loadFromUser->checkInput($upLast);
+        $email_mobile = $loadFromUser->checkInput($upEmailMobile);
+        $password = $loadFromUser->checkInput($upPassword);
+        // create screen-name with random link if name already existz / check if name exists in database
+        $screenName = '' . $first_name . '_' . $last_name . '';
+        if (DB::query('SELECT screenName FROM users WHERE screenName = :screenName', array(':screenName' => $screenName))) {
+            $screenRand = rand();
+            $userLink = ".$screenName.''.$screenRand";
+        } else {
+            $userLink = $screenName;
+        }
     }
 }
 

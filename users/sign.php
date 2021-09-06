@@ -1,6 +1,6 @@
 <?php
 
-require '../connect/DB.php';
+require '../core/database/connection.php';
 
 if (isset($_POST['first-name']) && !empty($_POST['first-name'])) {
     $upFirst = $_POST['first-name'];

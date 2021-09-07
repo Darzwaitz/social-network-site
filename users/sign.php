@@ -47,7 +47,7 @@ if (isset($_POST['first-name']) && !empty($_POST['first-name'])) {
                     if ((filter_var($email_mobile, FILTER_VALIDATE_EMAIL)) && $loadFromUser->checkEmail($email_mobile) === true) {
                         $error = "Email is already in use";
                     } else {
-                        $loadFromUser->create();
+                        $loadFromUser->create('users', array('first-name' => $first_name, 'last-name' => $last_name, 'mobile' => $email_mobile));
                     }
                 }
             }

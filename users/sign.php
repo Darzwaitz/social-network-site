@@ -31,6 +31,27 @@ if (isset($_POST['first-name']) && !empty($_POST['first-name'])) {
         } else {
             $userLink = $screenName;
         }
+        // regex email
+        if (!preg_match("^[_a-z0-9-]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $email_mobile)) {
+            // regex phone (11 numberz)           
+            if (!preg_match("^[0-9]{11}")) {
+                $error = 'Email id or mobile number iz not correct. Please try again';
+            } else {
+                if (!filter_var($email_mobile)) {
+                    $error = "Invalid Email Format";
+                } else if (strlen($first_name) > 20) {
+                    $error = "Name must be between 2-20 characterz";
+                } else if (strlen($password) < 5 && strlen($password) >= 60) {
+                    $error = "The password is either too short or too long";
+                } else {
+                    if ((filter_var($email_mobile, FILTER_VALIDATE_EMAIL)) && $loadFromUser->checkEmail($email_mobile) === true) {
+                        $error = "Email is already in use";
+                    } else {
+                        $loadFromUser->create();
+                    }
+                }
+            }
+        }
     }
 }
 

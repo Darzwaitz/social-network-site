@@ -27,14 +27,14 @@ if (isset($_POST['first-name']) && !empty($_POST['first-name'])) {
         $screenName = '' . $first_name . '_' . $last_name . '';
         if (DB::query('SELECT screenName FROM users WHERE screenName = :screenName', array(':screenName' => $screenName))) {
             $screenRand = rand();
-            $userLink = ".$screenName.''.$screenRand";
+            $userLink = '' . $screenName . '' . $screenRand . '';
         } else {
             $userLink = $screenName;
         }
         // regex email
-        if (!preg_match("^[_a-z0-9-]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $email_mobile)) {
+        if (!preg_match("^[_a-z0-9-]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$^", $email_mobile)) {
             // regex phone (11 numberz)           
-            if (!preg_match("^[0-9]{11}")) {
+            if (!preg_match("^[0-9]{11}^", $email_mobile)) {
                 $error = 'Email id or mobile number iz not correct. Please try again';
             } else {
                 if (!filter_var($email_mobile)) {
@@ -47,7 +47,7 @@ if (isset($_POST['first-name']) && !empty($_POST['first-name'])) {
                     if ((filter_var($email_mobile, FILTER_VALIDATE_EMAIL)) && $loadFromUser->checkEmail($email_mobile) === true) {
                         $error = "Email is already in use";
                     } else {
-                        $loadFromUser->create('users', array('first-name' => $first_name, 'last-name' => $last_name, 'mobile' => $email_mobile));
+                        $user_id = $loadFromUser->create('users', array('first_name' => $first_name, 'last_name' => $last_name, 'email' => $email_mobile, 'password' => password_hash($password, PASSWORD_BCRYPT), 'screenName' => $screenName, 'userLink' => $userLink, 'birthday' => $birth, 'gender' => $upgen));
                     }
                 }
             }

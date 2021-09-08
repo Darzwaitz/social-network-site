@@ -3,6 +3,7 @@
 include 'database/connection.php';
 include 'classes/users.php';
 include 'classes/post.php';
+include '../connect/DB.php';
 
 global $pdo;
 

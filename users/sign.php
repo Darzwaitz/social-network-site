@@ -48,6 +48,18 @@ if (isset($_POST['first-name']) && !empty($_POST['first-name'])) {
                         $error = "Email is already in use";
                     } else {
                         $user_id = $loadFromUser->create('users', array('first_name' => $first_name, 'last_name' => $last_name, 'email' => $email_mobile, 'password' => password_hash($password, PASSWORD_BCRYPT), 'screenName' => $screenName, 'userLink' => $userLink, 'birthday' => $birth, 'gender' => $upgen));
+
+                        $tstrong = true;
+                        // bin2hex — Convert binary data into hexadecimal representation
+                        // openssl_random_pseudo_bytes - Generates a string of pseudo-random bytes, with the number of bytes determined by the length parameter
+                        $token = bin2hex(openssl_random_pseudo_bytes(64, $tstrong));
+                        $loadFromUser->create('token', array('token' => $token, 'user_id' => $user_id));
+
+                        // cookie name - value - expiration date(7 days) - server port of cookie, set to slash, cookie available within entire domain - domain name of cookie - wether or not cookie should be set for secure connection only, default is false - hhtp only, set to true, only accessible through http, and not a script, important for security
+                        setcookie('FBID', $token, time() + 60 * 60 * 24 * 7, '/', NULL, NULL, true);
+
+                        // direct user to next page after sign up form validates
+                        header('Location: index.php');
                     }
                 }
             }

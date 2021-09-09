@@ -37,17 +37,20 @@ if (isset($_POST['first-name']) && !empty($_POST['first-name'])) {
             if (!preg_match("^[0-9]{11}^", $email_mobile)) {
                 $error = 'Email id or mobile number iz not correct. Please try again';
             } else {
-                if (!filter_var($email_mobile)) {
-                    $error = "Invalid Email Format";
-                } else if (strlen($first_name) > 20) {
-                    $error = "Name must be between 2-20 characterz";
-                } else if (strlen($password) < 5 && strlen($password) >= 60) {
-                    $error = "The password is either too short or too long";
+                $mob = strlen((string)$email_mobile);
+
+                if ($mob > 11 || $mob < 11) {
+                    $error = 'Mobile number iz not valid';
+                } else if (strlen($password) < 5 || strlen($password) >= 60) {
+                    $error = 'Password iz not correct';
                 } else {
-                    if ((filter_var($email_mobile, FILTER_VALIDATE_EMAIL)) && $loadFromUser->checkEmail($email_mobile) === true) {
-                        $error = "Email is already in use";
+                    if (DB::query(
+                        'SELECT mobile FROM users WHERE mobile=:mobile',
+                        array(':mobile' => $email_mobile)
+                    )) {
+                        $error = 'Mobile number iz already in use';
                     } else {
-                        $user_id = $loadFromUser->create('users', array('first_name' => $first_name, 'last_name' => $last_name, 'email' => $email_mobile, 'password' => password_hash($password, PASSWORD_BCRYPT), 'screenName' => $screenName, 'userLink' => $userLink, 'birthday' => $birth, 'gender' => $upgen));
+                        $user_id = $loadFromUser->create('users', array('users', array('first_name' => $first_name, 'last_name' => $last_name, 'mobile' => $email_mobile, 'password' => password_hash($password, PASSWORD_BCRYPT), 'screenName' => $screenName, 'userLink' => $userLink, 'birthday' => $birth, 'gender' => $upgen)));
 
                         $tstrong = true;
                         // bin2hex — Convert binary data into hexadecimal representation
@@ -63,9 +66,36 @@ if (isset($_POST['first-name']) && !empty($_POST['first-name'])) {
                     }
                 }
             }
+        } else {
+            if (!filter_var($email_mobile)) {
+                $error = "Invalid Email Format";
+            } else if (strlen($first_name) > 20) {
+                $error = "Name must be between 2-20 characterz";
+            } else if (strlen($password) < 5 && strlen($password) >= 60) {
+                $error = "The password is either too short or too long";
+            } else {
+                if ((filter_var($email_mobile, FILTER_VALIDATE_EMAIL)) && $loadFromUser->checkEmail($email_mobile) === true) {
+                    $error = "Email is already in use";
+                } else {
+                    $user_id = $loadFromUser->create('users', array('first_name' => $first_name, 'last_name' => $last_name, 'email' => $email_mobile, 'password' => password_hash($password, PASSWORD_BCRYPT), 'screenName' => $screenName, 'userLink' => $userLink, 'birthday' => $birth, 'gender' => $upgen));
+
+                    $tstrong = true;
+                    // bin2hex — Convert binary data into hexadecimal representation
+                    // openssl_random_pseudo_bytes - Generates a string of pseudo-random bytes, with the number of bytes determined by the length parameter
+                    $token = bin2hex(openssl_random_pseudo_bytes(64, $tstrong));
+                    $loadFromUser->create('token', array('token' => $token, 'user_id' => $user_id));
+
+                    // cookie name - value - expiration date(7 days) - server port of cookie, set to slash, cookie available within entire domain - domain name of cookie - wether or not cookie should be set for secure connection only, default is false - hhtp only, set to true, only accessible through http, and not a script, important for security
+                    setcookie('FBID', $token, time() + 60 * 60 * 24 * 7, '/', NULL, NULL, true);
+
+                    // direct user to next page after sign up form validates
+                    header('Location: index.php');
+                }
+            }
         }
     }
 }
+
 
 ?>
 

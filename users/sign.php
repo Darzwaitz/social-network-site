@@ -96,7 +96,6 @@ if (isset($_POST['first-name']) && !empty($_POST['first-name'])) {
     }
 }
 
-
 ?>
 
 <!DOCTYPE html>
@@ -111,7 +110,26 @@ if (isset($_POST['first-name']) && !empty($_POST['first-name'])) {
 </head>
 
 <body>
-    <div class="header"></div>
+    <div class="header">
+        <div class="logo">Fakebook</div>
+        <form action="sign.php" method="post">
+            <div class="mobile_input">
+                <div class="input-text">Email or phone</div>
+                <input type="text" name="in-email-mobile" id="email-mobile" class="input-text-field">
+            </div>
+            <div class="passord-input">
+                <div class="password-input">
+                    <div>Password</div>
+                    <input type="password" name="in-pass" id="in-password" class="input-text-field">
+                    <div class="forgotten-acc">Forgotten account</div>
+                </div>
+                <div class="login-button">
+                    <input type="submit" value="Log in" class="sign-in login">
+                </div>
+            </div>
+        </form>
+    </div>
+
     <div class="main">
         <div class="left-side">
             <img src="../assets/image/Signin-image.png" class="img-test" alt="signin image">

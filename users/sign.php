@@ -96,6 +96,61 @@ if (isset($_POST['first-name']) && !empty($_POST['first-name'])) {
     }
 }
 
+// login
+if (isset($_POST['in-email-mobile']) && !empty($_POST['in-email-mobile'])) {
+    $email_mobile = $_POST['in-email-mobile'];
+    $in_pass = $_POST['in-pass'];
+    echo $email_mobile, $in_pass;
+
+    if (!preg_match("^[_a-z0-9-]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$^", $email_mobile)) {
+        if (!preg_match("^[0-9]{11}^", $email_mobile)) {
+            $error = "Email or phone is not coorect - please try again";
+        } else {
+            if (DB::query("SELECT mobile FROM users WHERE mobile = :mobile", array(":mobile" => $email_mobile))) {
+                if (password_verify($in_pass, DB::query('SELECT password FROM users WHERE mobile=:mobile', array(':mobile => $email_mobile'))[0]['password'])) {
+
+                    $user_id = DB::query(
+                        'SELECT user_id FROM users WHERE email=:email',
+                        array(':mobile' => $email_mobile)
+                    )[0]['user_id'];
+
+                    $tstrong = true;
+                    $token = bin2hex(openssl_random_pseudo_bytes(64, $tstrong));
+                    $loadFromUser->create('token', array('token' => $token, 'user_id' => $user_id));
+
+                    setcookie('FBID', $token, time() + 60 * 60 * 24 * 7, '/', NULL, NULL, true);
+
+                    // direct user to next page after sign up form validates
+                    header('Location: index.php');
+                };
+            } else {
+                $error = "User hasn't been found";
+            }
+        }
+    } else {
+        if (DB::query("SELECT email FROM users WHERE email = :email", array(":email" => $email_mobile))) {
+            if (password_verify($in_pass, DB::query('SELECT password FROM users WHERE email=:email', array(':email => $email_mobile'))[0]['password'])) {
+
+                $user_id = DB::query(
+                    'SELECT user_id FROM users WHERE email=:email',
+                    array(':email' => $email_mobile)
+                )[0]['user_id'];
+
+                $tstrong = true;
+                $token = bin2hex(openssl_random_pseudo_bytes(64, $tstrong));
+                $loadFromUser->create('token', array('token' => $token, 'user_id' => $user_id));
+
+                setcookie('FBID', $token, time() + 60 * 60 * 24 * 7, '/', NULL, NULL, true);
+
+                // direct user to next page after sign up form validates
+                header('Location: index.php');
+            };
+        } else {
+            $error = "User hasn't been found";
+        }
+    }
+}
+
 ?>
 
 <!DOCTYPE html>

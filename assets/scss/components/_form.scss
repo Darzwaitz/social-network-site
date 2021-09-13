@@ -1,1 +1,45 @@
-// unused yet - delete this on first use
+.sign-in-form{
+    display: flex;
+    align-items: center;
+
+}
+.mobile-input{
+    margin-left: 1rem;
+}
+.input-text{
+    font-size: 1.2rem;
+    padding-bottom: .5rem;
+
+    &-field{
+    background-color: $text-field-bg-1;
+    border: none;
+    height: 2rem;
+    }
+}
+
+.password{
+    &-input{
+    margin-left: 1rem;
+    margin-top: 2rem;
+    margin-right: 1rem;
+    }
+
+    &-title{
+    font-size: 1.2rem;
+    padding-bottom: .5rem;
+    }
+}
+.forgotten-acc{
+    font-size: 1.2rem;
+    margin-top: .5rem;
+    color: $color-secondary-blue;
+}
+input.sign-in.login{
+    height: 30%;
+    background-color: #4267bc;
+    color: $color-white;
+    border: none;
+    box-shadow: 0 0 1px $color-black;
+    margin-top: 1.8rem;
+    padding: .5rem;
+}

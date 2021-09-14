@@ -1,5 +1,6 @@
 <?php
 
+// require '../connect/DB.php';
 require '../core/load.php';
 
 if (isset($_POST['first-name']) && !empty($_POST['first-name'])) {
@@ -52,12 +53,13 @@ if (isset($_POST['first-name']) && !empty($_POST['first-name'])) {
                     } else {
                         $user_id = $loadFromUser->create('users', array('users', array('first_name' => $first_name, 'last_name' => $last_name, 'mobile' => $email_mobile, 'password' => password_hash($password, PASSWORD_BCRYPT), 'screenName' => $screenName, 'userLink' => $userLink, 'birthday' => $birth, 'gender' => $upgen)));
 
+                        $loadFromUser->create('profile', array('userId' => $user_id, 'birthday' => $birth, 'firstName' => $first_name, 'lastName' => $last_name, 'gender' => $upgen));
                         $tstrong = true;
                         // bin2hex — Convert binary data into hexadecimal representation
                         // openssl_random_pseudo_bytes - Generates a string of pseudo-random bytes, with the number of bytes determined by the length parameter
                         $token = bin2hex(openssl_random_pseudo_bytes(64, $tstrong));
-                        $loadFromUser->create('token', array('token' => $token, 'user_id' => $user_id));
 
+                        $loadFromUser->create('token', array('token' => sha1($token), 'user_id' => $user_id));
                         // cookie name - value - expiration date(7 days) - server port of cookie, set to slash, cookie available within entire domain - domain name of cookie - wether or not cookie should be set for secure connection only, default is false - hhtp only, set to true, only accessible through http, and not a script, important for security
                         setcookie('FBID', $token, time() + 60 * 60 * 24 * 7, '/', NULL, NULL, true);
 
@@ -79,11 +81,16 @@ if (isset($_POST['first-name']) && !empty($_POST['first-name'])) {
                 } else {
                     $user_id = $loadFromUser->create('users', array('first_name' => $first_name, 'last_name' => $last_name, 'email' => $email_mobile, 'password' => password_hash($password, PASSWORD_BCRYPT), 'screenName' => $screenName, 'userLink' => $userLink, 'birthday' => $birth, 'gender' => $upgen));
 
+                    $loadFromUser->create('profile', array('userId' => $user_id, 'birthday' => $birth, 'firstName' => $first_name, 'lastName' => $last_name, 'gender' => $upgen));
+
+
+
+
                     $tstrong = true;
                     // bin2hex — Convert binary data into hexadecimal representation
                     // openssl_random_pseudo_bytes - Generates a string of pseudo-random bytes, with the number of bytes determined by the length parameter
                     $token = bin2hex(openssl_random_pseudo_bytes(64, $tstrong));
-                    $loadFromUser->create('token', array('token' => $token, 'user_id' => $user_id));
+                    $loadFromUser->create('token', array('token' => sha1($token), 'user_id' => $user_id));
 
                     // cookie name - value - expiration date(7 days) - server port of cookie, set to slash, cookie available within entire domain - domain name of cookie - wether or not cookie should be set for secure connection only, default is false - hhtp only, set to true, only accessible through http, and not a script, important for security
                     setcookie('FBID', $token, time() + 60 * 60 * 24 * 7, '/', NULL, NULL, true);
@@ -100,7 +107,7 @@ if (isset($_POST['first-name']) && !empty($_POST['first-name'])) {
 if (isset($_POST['in-email-mobile']) && !empty($_POST['in-email-mobile'])) {
     $email_mobile = $_POST['in-email-mobile'];
     $in_pass = $_POST['in-pass'];
-    echo $email_mobile, $in_pass;
+    // echo $email_mobile, $in_pass;
 
     if (!preg_match("^[_a-z0-9-]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$^", $email_mobile)) {
         if (!preg_match("^[0-9]{11}^", $email_mobile)) {
@@ -116,13 +123,15 @@ if (isset($_POST['in-email-mobile']) && !empty($_POST['in-email-mobile'])) {
 
                     $tstrong = true;
                     $token = bin2hex(openssl_random_pseudo_bytes(64, $tstrong));
-                    $loadFromUser->create('token', array('token' => $token, 'user_id' => $user_id));
+                    $loadFromUser->create('token', array('token' => sha1($token), 'user_id' => $user_id));
 
                     setcookie('FBID', $token, time() + 60 * 60 * 24 * 7, '/', NULL, NULL, true);
 
                     // direct user to next page after sign up form validates
                     header('Location: index.php');
-                };
+                } else {
+                    $error = "The password is either too short or too long";
+                }
             } else {
                 $error = "User hasn't been found";
             }
@@ -138,13 +147,15 @@ if (isset($_POST['in-email-mobile']) && !empty($_POST['in-email-mobile'])) {
 
                 $tstrong = true;
                 $token = bin2hex(openssl_random_pseudo_bytes(64, $tstrong));
-                $loadFromUser->create('token', array('token' => $token, 'user_id' => $user_id));
+                $loadFromUser->create('token', array('token' => sha1($token), 'user_id' => $user_id));
 
                 setcookie('FBID', $token, time() + 60 * 60 * 24 * 7, '/', NULL, NULL, true);
 
                 // direct user to next page after sign up form validates
                 header('Location: index.php');
-            };
+            } else {
+                $error = "Password is not correct";
+            }
         } else {
             $error = "User hasn't been found";
         }
@@ -207,7 +218,7 @@ if (isset($_POST['in-email-mobile']) && !empty($_POST['in-email-mobile'])) {
                         <input type="text" name="email-mobile" id="up-email" placeholder="Mobile number or email address" class="text-input">
                     </div>
                     <div class="sign-up-password">
-                        <input type="password" name="up-password" id="up-password" class="text-input">
+                        <input type="password" name="up-password" id="up-password" class="text-input" placeholder="Password">
                     </div>
                     <div class="sign-up-birthday">
                         <div class="bday">Birthday</div>

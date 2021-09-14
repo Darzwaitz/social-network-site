@@ -120,6 +120,7 @@ body {
 .error {
   color: red;
   font-size: 1.8rem;
+  margin-top: 3.2rem;
 }
 
 .sign-up-form {

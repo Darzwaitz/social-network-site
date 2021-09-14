@@ -34,7 +34,7 @@ class User
     {
         $columns = implode(',', array_keys($fields));
         $values = ':' . implode(', :', array_keys($fields));
-        $sql = "INSERT INTO {$table}({$columns}) VALUES({$values})";
+        $sql = "INSERT INTO {$table} ({$columns}) VALUES ({$values})";
 
         if ($stmt = $this->pdo->prepare($sql)) {
             foreach ($fields as $key => $data) {
